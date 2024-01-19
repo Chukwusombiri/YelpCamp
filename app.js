@@ -19,7 +19,7 @@ const localStrategy = require('passport-local');
 const User = require('./models/user');
 const authRoutes = require('./routes/users');
 const helmet = require('helmet');
-const dbUrl = 'mongodb+srv://sergitet94:wdvCYE0fAgNp01u6@cluster0.bxhtck7.mongodb.net/?retryWrites=true&w=majority';
+const dbUrl = process.env.DB_URL;
 
 /* Mongodb Connection */
 async function connectDb(){
