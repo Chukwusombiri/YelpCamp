@@ -19,12 +19,12 @@ const localStrategy = require('passport-local');
 const User = require('./models/user');
 const authRoutes = require('./routes/users');
 const helmet = require('helmet');
-const dbUrl = 'mongodb://127.0.0.1:27017/yelp-camp';
+const dbUrl = 'mongodb+srv://sergitet94:wdvCYE0fAgNp01u6@cluster0.bxhtck7.mongodb.net/?retryWrites=true&w=majority';
 
 /* Mongodb Connection */
 async function connectDb(){
     try {
-        await mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp'/* dbUrl */)
+        await mongoose.connect(/* 'mongodb://127.0.0.1:27017/yelp-camp' */dbUrl)
         console.log('Connected to database');
     } catch (error) {
         console.log('unable to connect database',error)
