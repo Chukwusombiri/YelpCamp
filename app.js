@@ -19,12 +19,13 @@ const localStrategy = require('passport-local');
 const User = require('./models/user');
 const authRoutes = require('./routes/users');
 const helmet = require('helmet');
-const dbUrl = process.env.DB_URL;
+const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/yelp-camp';
+const secret = process.env.SECRET || 'thisismyappstrongsecret';
 
 /* Mongodb Connection */
 async function connectDb(){
     try {
-        await mongoose.connect(/* 'mongodb://127.0.0.1:27017/yelp-camp' */dbUrl)
+        await mongoose.connect(dbUrl)
         console.log('Connected to database');
     } catch (error) {
         console.log('unable to connect database',error)
@@ -46,7 +47,7 @@ const store = MongoStore.create({
     mongoUrl: dbUrl,
     touchAfter: 24 * 60 * 60,
     crypto: {
-        secret: 'thisshouldbeabettersecret!'
+        secret,
     }
 });
 store.on('error',function(e){
@@ -56,7 +57,7 @@ store.on('error',function(e){
 const sessionConfig = {
     store,
     name: 'user_session',
-    secret: 'thisismyappsecret',
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -157,4 +158,5 @@ app.use((err,req,res,next)=>{
 
 
 /* App port pipeline */
-app.listen(3000,()=>console.log('Serving on port 3000'));
+const port = process.env.PORT || "3000";
+app.listen(port,()=>console.log(`App is running successfully! Port: ${port}`));
