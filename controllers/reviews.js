@@ -10,7 +10,7 @@ module.exports.store = async(req,res,next)=>{
         campground.reviews.push(review);
         campground.save();
         req.flash('success','Successful!! Review was added for this Campground')
-        res.redirect(`/campgrounds/${campground._id}`);        
+        return res.redirect(`/campgrounds/${campground._id}`);        
     } catch (error) {
         next(error);
     }
@@ -21,5 +21,5 @@ module.exports.destroy = async(req,res)=>{
     await Campground.findByIdAndUpdate(id,{$pull: {reviews: reviewId}});
     await Review.findByIdAndDelete(reviewId);
     req.flash('success','Successful!! Review was deleted')
-    res.redirect(`/campgrounds/${id}`); 
+    return res.redirect(`/campgrounds/${id}`); 
 }

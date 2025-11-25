@@ -6,11 +6,11 @@ const {cloudinary} = require('../cloudinary');
 
 module.exports.index = async (req,res)=>{
     const campgrounds = await Campground.find();    
-    res.render('campgrounds/index',{campgrounds});
+    return res.render('campgrounds/index',{campgrounds});    
 }
 
 module.exports.create = (req,res)=>{   
-    res.render('campgrounds/new');
+    return res.render('campgrounds/new');
 }
 
 module.exports.show = async(req,res)=>{
@@ -24,7 +24,8 @@ module.exports.show = async(req,res)=>{
         req.flash('error','whoops!! Cannot find campground');
         return res.redirect('/campgrounds');
     } 
-    res.render('campgrounds/show',{campground});
+    
+    return res.render('campgrounds/show',{campground});
 }
 
 module.exports.store = async(req,res)=>{        
@@ -37,8 +38,7 @@ module.exports.store = async(req,res)=>{
     camp.geometry = geoData.body.features[0].geometry;
     camp.author = req.user._id;
     camp.images = req.files.map(fil=>({url: fil.path, filename: fil.filename}));
-    await camp.save();
-    console.log(camp);
+    await camp.save();    
     req.flash('success','Successful!! new campground was added');
     return res.redirect(`/campgrounds/${camp._id}`);
 }
@@ -49,7 +49,7 @@ module.exports.edit = async(req,res)=>{
         req.flash('error','Cannot find campground!');
         return res.redirect('/campgrounds');
     }
-    res.render('campgrounds/edit',{campground});
+    return res.render('campgrounds/edit',{campground});
 }
 
 module.exports.update = async(req,res)=>{    
@@ -69,14 +69,14 @@ module.exports.update = async(req,res)=>{
         await camp.updateOne({$pull: {images: {filename: {$in: req.body.deleteImages}}}})
     }        
     req.flash('success','Successful!! Campground was updated')
-    res.redirect(`/campgrounds/${camp._id}`);
+    return res.redirect(`/campgrounds/${camp._id}`);
 }
 
 module.exports.destroy = async(req,res,next)=>{
     try{
      await Campground.findByIdAndDelete(req.params.id);  
      req.flash('success','Successful!! Camground was deleted')  
-     res.redirect(`/campgrounds`);
+     return res.redirect(`/campgrounds`);
     }catch(error){     
       console.log(error);
       next(error);

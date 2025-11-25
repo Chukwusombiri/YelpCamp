@@ -28,14 +28,14 @@ module.exports.store = async (req,res)=>{
 }
 
 module.exports.login = (req,res)=>{
-    res.render('auth/login');
+    return res.render('auth/login');
 }
 
 module.exports.redirectUser = (req,res)=>{
     req.flash('success','welcome back');
     /* req.session.user_id = registeredUser._id; */
     const redirectUrl = res.locals.returnTo || '/campgrounds';
-    res.redirect(redirectUrl);
+    return res.redirect(redirectUrl);
 }
 
 module.exports.logout = (req,res)=>{
@@ -44,6 +44,6 @@ module.exports.logout = (req,res)=>{
             return next(err);
         }
         req.flash('success', 'Goodbye!');
-        res.redirect('/campgrounds');
+        return res.redirect('/campgrounds');
     });    
 }

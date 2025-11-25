@@ -28,7 +28,8 @@ async function connectDb(){
         await mongoose.connect(dbUrl)
         console.log('Connected to database');
     } catch (error) {
-        console.log('unable to connect database',error)
+        console.log('Unable to connect database', error)
+        process.exit(1);
     }
 }
 connectDb();
@@ -50,6 +51,7 @@ const store = MongoStore.create({
         secret,
     }
 });
+
 store.on('error',function(e){
     console.log('SESSION STORE ERROR',e);
 });
@@ -71,6 +73,7 @@ const sessionConfig = {
 app.use(session(sessionConfig));
 app.use(flash());
 app.use(helmet());
+
 const scriptSrcUrls = [
     "https://api.tiles.mapbox.com/",
     "https://api.mapbox.com/",
@@ -122,7 +125,7 @@ passport.deserializeUser(User.deserializeUser());
 
 /* middlewares */
 app.use((req,res,next)=>{
-    res.locals.currentUser = req.user;
+    res.locals.currentUser = req.user || null;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');    
     next();
